@@ -1,0 +1,15 @@
+FROM ubuntu:20.04
+
+ENV TZ=Asia/Singapore
+ENV LC_ALL=C.UTF-8
+ENV CC=/usr/bin/clang-8
+ENV CXX=/usr/bin/clang++-8
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
+    apt-get update && \
+    apt-get -y upgrade && \
+    apt-get -y install git vim wget curl gdb locate software-properties-common apt-transport-https build-essential sudo && \
+    apt-get -y install make unzip autoconf automake libtool gcc-8 clang-8 python3-pip && \
+    python3 -m pip install conan===1.60.0 && \
+    conan install jemalloc/5.2.1@_/_ -s compiler=clang -s compiler.version=8 -s compiler.libcxx=libstdc++11 -s cppstd=17 --build=jemalloc
+
